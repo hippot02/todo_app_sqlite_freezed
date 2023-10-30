@@ -1,3 +1,4 @@
+import 'package:path/path.dart' as p;
 import 'package:todo_app_sqlite_freezed/models/todo_model.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -15,44 +16,44 @@ class DatabaseHelper {
     _database = await _initDatabase();
     return _database!;
   }
-}
 
-_initDatabase() async {
-  String path = join(await getDatabasesPath(), _dbName);
-  return await openDatabase(path, version: _dbVersion, onCreate: _onCreate);
-}
+  _initDatabase() async {
+    String path = p.join(await getDatabasesPath(), _dbName);
+    return await openDatabase(path, version: _dbVersion, onCreate: _onCreate);
+  }
 
-Future _onCreate(Database db, int version) async {
-  await db.execute('''
-    CREATE TABLE $_tableName (
-      id INTEGER PRIMARY KEY,
-      task TEXT NOT NULL,
-      isCompleted INTEGER NOT NULL
-    )
-  ''');
-}
+  Future _onCreate(Database db, int version) async {
+    await db.execute('''
+      CREATE TABLE $_tableName (
+        id INTEGER PRIMARY KEY,
+        task TEXT NOT NULL,
+        isCompleted INTEGER NOT NULL
+      )
+    ''');
+  }
 
-Future<int> insert(Todo todo) async {
-  Database db = await instance.database;
-  return await db.insert(_tableName, todo.toMap());
-}
+  Future<int> insert(Todo todo) async {
+    Database db = await instance.database;
+    return await db.insert(_tableName, todo.toJson());
+  }
 
-// Get all tasks
-Future<List<Todo>> getAllTodos() async {
-  Database db = await instance.database;
-  var todos = await db.query(_tableName);
-  return todos.map((e) => Todo.fromMap(e)).toList();
-}
+  // Get all tasks
+  Future<List<Todo>> getAllTodos() async {
+    Database db = await instance.database;
+    var todos = await db.query(_tableName);
+    return todos.map((e) => Todo.fromJson(e)).toList();
+  }
 
-// Update a task
-Future<int> update(Todo todo) async {
-  Database db = await instance.database;
-  return await db
-      .update(_tableName, todo.toMap(), where: 'id = ?', whereArgs: [todo.id]);
-}
+  // Update a task
+  Future<int> update(Todo todo) async {
+    Database db = await instance.database;
+    return await db.update(_tableName, todo.toJson(),
+        where: 'id = ?', whereArgs: [todo.id]);
+  }
 
-// Delete a task
-Future<int> delete(int id) async {
-  Database db = await instance.database;
-  return await db.delete(_tableName, where: 'id = ?', whereArgs: [id]);
+  // Delete a task
+  Future<int> delete(int id) async {
+    Database db = await instance.database;
+    return await db.delete(_tableName, where: 'id = ?', whereArgs: [id]);
+  }
 }
