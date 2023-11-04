@@ -7,4 +7,5 @@ A new Flutter project.
 Application mobile permettant d'avoir une liste de tâches de pouvoir en ajouter, de les modifiés et de les supprimer.
 
 Il est possible de passer une tache de l'état "Non réalisée" à "Réalisée" en cliquant dessus.
-Pour supprimer il suffit de slider la taches d'un côté ou de l'autre.
+Pour supprimer il suffit de slider la taches du début à la fin.
+Pour modifier ça sera de la fin au début.
