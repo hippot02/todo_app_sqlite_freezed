@@ -4,13 +4,7 @@ A new Flutter project.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Application mobile permettant d'avoir une liste de tâches de pouvoir en ajouter, de les modifiés et de les supprimer.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Il est possible de passer une tache de l'état "Non réalisée" à "Réalisée" en cliquant dessus.
+Pour supprimer il suffit de slider la taches d'un côté ou de l'autre.

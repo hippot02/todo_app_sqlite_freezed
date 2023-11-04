@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app_sqlite_freezed/models/todo_model.dart';
 import 'package:todo_app_sqlite_freezed/pages/add_task.dart';
+import 'package:todo_app_sqlite_freezed/pages/edit_task.dart';
 import 'database.dart';
 
 void main() {
@@ -10,7 +11,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -34,7 +34,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // Initialisez _data avec une liste vide au départ
   late Future<List<Todo>> _data = DatabaseHelper.instance.getAllTodos();
 
   @override
@@ -62,15 +61,36 @@ class _MyHomePageState extends State<MyHomePage> {
                     final isCompleted = task.isCompleted;
                     return Dismissible(
                       key: Key(task.toString()),
-                      onDismissed: (direction) async {
-                        await DatabaseHelper.instance.delete(task.id!);
-                        setState(() {
-                          _data = DatabaseHelper.instance.getAllTodos();
-                        });
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text('Pouf ! ${task.task} disparait !')));
-                      },
+                      direction: DismissDirection.horizontal,
                       background: Container(color: Colors.red),
+                      secondaryBackground: Container(color: Colors.blue),
+                      onDismissed: (direction) async {
+                        if (direction == DismissDirection.startToEnd) {
+                          await DatabaseHelper.instance.delete(task.id!);
+                          setState(() {
+                            _data = DatabaseHelper.instance.getAllTodos();
+                          });
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content:
+                                    Text('Pouf ! ${task.task} disparait !')),
+                          );
+                        } else if (direction == DismissDirection.endToStart) {
+                          final updatedTask = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditTaskPage(task: task),
+                            ),
+                          );
+
+                          if (updatedTask != null) {
+                            // Mise à jour de la liste des tâches ici, après avoir apporté des modifications
+                            setState(() {
+                              _data = DatabaseHelper.instance.getAllTodos();
+                            });
+                          }
+                        }
+                      },
                       child: ListTile(
                         title: Text(
                           task.task,
@@ -99,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
             } else if (snapshot.hasError) {
               return Text('Erreur : ${snapshot.error}');
             } else {
-              return const CircularProgressIndicator();
+              return CircularProgressIndicator();
             }
           },
         ),

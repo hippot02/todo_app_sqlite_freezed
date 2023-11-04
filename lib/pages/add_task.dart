@@ -12,6 +12,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Permet d'ajouter une tâche
     return Scaffold(
       appBar: AppBar(
         title: Text("Ajouter une tâche"),
