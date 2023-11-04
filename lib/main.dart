@@ -62,8 +62,38 @@ class _MyHomePageState extends State<MyHomePage> {
                     return Dismissible(
                       key: Key(task.toString()),
                       direction: DismissDirection.horizontal,
-                      background: Container(color: Colors.red),
-                      secondaryBackground: Container(color: Colors.blue),
+                      background: Container(
+                        color: Colors.red,
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                                size: 32.0,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      secondaryBackground: Container(
+                        color: Colors.blue,
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Icon(
+                                Icons.edit,
+                                color: Colors.white,
+                                size: 32.0,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       onDismissed: (direction) async {
                         if (direction == DismissDirection.startToEnd) {
                           await DatabaseHelper.instance.delete(task.id!);
