@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Ma TodoList'),
     );
   }
 }
@@ -60,24 +60,36 @@ class _MyHomePageState extends State<MyHomePage> {
                   itemBuilder: (context, index) {
                     final task = snapshot.data![index];
                     final isCompleted = task.isCompleted;
-                    return ListTile(
-                      title: Text(
-                        task.task,
-                        style: TextStyle(
-                          color: isCompleted ? Colors.green : Colors.black,
-                          decoration: isCompleted
-                              ? TextDecoration.lineThrough
-                              : TextDecoration.none,
-                        ),
-                      ),
-                      onTap: () async {
-                        final updatedTask =
-                            task.copyWith(isCompleted: !isCompleted);
-                        await DatabaseHelper.instance.update(updatedTask);
+                    return Dismissible(
+                      key: Key(task.toString()),
+                      onDismissed: (direction) async {
+                        await DatabaseHelper.instance.delete(task.id!);
                         setState(() {
                           _data = DatabaseHelper.instance.getAllTodos();
                         });
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Pouf ! ${task.task} disparait !')));
                       },
+                      background: Container(color: Colors.red),
+                      child: ListTile(
+                        title: Text(
+                          task.task,
+                          style: TextStyle(
+                            color: isCompleted ? Colors.green : Colors.black,
+                            decoration: isCompleted
+                                ? TextDecoration.lineThrough
+                                : TextDecoration.none,
+                          ),
+                        ),
+                        onTap: () async {
+                          final updatedTask =
+                              task.copyWith(isCompleted: !isCompleted);
+                          await DatabaseHelper.instance.update(updatedTask);
+                          setState(() {
+                            _data = DatabaseHelper.instance.getAllTodos();
+                          });
+                        },
+                      ),
                     );
                   },
                 );
