@@ -105,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                                 content:
-                                    Text('Pouf ! ${task.task} disparait !')),
+                                    Text('Pouf ! "${task.task}\" disparait !')),
                           );
                         } else if (direction == DismissDirection.endToStart) {
                           // Swipe vers la modification de la tâche
