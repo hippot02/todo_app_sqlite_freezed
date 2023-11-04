@@ -23,6 +23,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Page de modification, tout ce qu'il y a de plus basique, on créer une copie avec les modifications souhaitées et on update la bdd.
       appBar: AppBar(
         title: Text("Modifier la tâche"),
       ),
@@ -42,7 +43,6 @@ class _EditTaskPageState extends State<EditTaskPage> {
                 if (updatedTask.isNotEmpty) {
                   final updatedTodo = widget.task.copyWith(task: updatedTask);
                   await DatabaseHelper.instance.update(updatedTodo);
-
                   Navigator.of(context).pop(updatedTodo);
                 }
               },

@@ -63,6 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       key: Key(task.toString()),
                       direction: DismissDirection.horizontal,
                       background: Container(
+                        //Esthétique quand on swipe droite ou gauche avec icone et couleur différente pour faciliter la compréhension.
                         color: Colors.red,
                         child: const Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -96,6 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       onDismissed: (direction) async {
                         if (direction == DismissDirection.startToEnd) {
+                          //Swipe vers la suppresion de la tâche
                           await DatabaseHelper.instance.delete(task.id!);
                           setState(() {
                             _data = DatabaseHelper.instance.getAllTodos();
@@ -106,6 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     Text('Pouf ! ${task.task} disparait !')),
                           );
                         } else if (direction == DismissDirection.endToStart) {
+                          // Swipe vers la modification de la tâche
                           final updatedTask = await Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -114,10 +117,14 @@ class _MyHomePageState extends State<MyHomePage> {
                           );
 
                           if (updatedTask != null) {
-                            // Mise à jour de la liste des tâches ici, après avoir apporté des modifications
+                            // Mise à jour de la liste des tâches après avoir apporté des modifications
                             setState(() {
                               _data = DatabaseHelper.instance.getAllTodos();
                             });
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Modification réussi !')),
+                            );
                           }
                         }
                       },
@@ -125,6 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         title: Text(
                           task.task,
                           style: TextStyle(
+                            //On verifié l'état de la tâche pour barer ou non la tache
                             color: isCompleted ? Colors.green : Colors.black,
                             decoration: isCompleted
                                 ? TextDecoration.lineThrough
@@ -132,6 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
                         onTap: () async {
+                          //Permet au clic, de modifier l'état de la tache
                           final updatedTask =
                               task.copyWith(isCompleted: !isCompleted);
                           await DatabaseHelper.instance.update(updatedTask);
@@ -155,6 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        //Bouton d'ajout d'une tâche, ouvre sur une nouvelle page et reactualise les tâches une fois ajoutée.
         onPressed: () async {
           final newTask = await Navigator.push(
             context,
