@@ -1,6 +1,6 @@
 # todo_app_sqlite_freezed
 
-Application réalisé dans le cadre des cours.
+Application réalisée dans le cadre des cours.
 
 ## Getting Started
 
